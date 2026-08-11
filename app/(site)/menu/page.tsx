@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CategoryFilter, type FilterOption } from "@/components/menu/CategoryFilter";
+import { MenuGrid } from "@/components/menu/MenuGrid";
+import { MENU_CATEGORIES, MENU_ITEMS, getMenuItemsByCategory } from "@/lib/data/menu";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildMetadata({
@@ -10,34 +13,33 @@ export const metadata: Metadata = buildMetadata({
   path: "/menu",
 });
 
-const MENU_SECTIONS = [
-  { href: "/menu/juices", name: "Juices & Smoothies", description: "Fresh juices, juice blends, smoothies and fruit cocktails" },
-  { href: "/menu/food", name: "Food", description: "Restaurant food" },
-  { href: "/menu/shawarma", name: "Shawarma", description: "" },
-  { href: "/menu/chips", name: "Chips", description: "" },
+const FILTER_OPTIONS: FilterOption[] = [
+  { slug: "all", label: "All" },
+  ...MENU_CATEGORIES.map((category) => ({ slug: category.slug, label: category.name })),
 ];
 
-export default function MenuPage() {
+export default async function MenuPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const { category } = await searchParams;
+  const active = category && MENU_CATEGORIES.some((c) => c.slug === category) ? category : "all";
+  const items = active === "all" ? MENU_ITEMS : getMenuItemsByCategory(active);
+
   return (
     <Section as="div">
       <Container>
-        <h1 className="text-3xl font-semibold tracking-tight">Menu</h1>
-        <p className="mt-2 text-muted">
-          Explore FreshPick&apos;s menu categories below.
-        </p>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
-          {MENU_SECTIONS.map((section) => (
-            <Link
-              key={section.href}
-              href={section.href}
-              className="rounded-lg border border-border p-6 transition-colors hover:border-primary"
-            >
-              <h2 className="text-xl font-semibold">{section.name}</h2>
-              {section.description && (
-                <p className="mt-1 text-sm text-muted">{section.description}</p>
-              )}
-            </Link>
-          ))}
+        <SectionHeading
+          eyebrow="Menu"
+          title="Everything on the menu"
+          description="Filter by category to find exactly what you're craving."
+        />
+        <div className="mt-8">
+          <CategoryFilter options={FILTER_OPTIONS} active={active} />
+        </div>
+        <div className="mt-10">
+          <MenuGrid items={items} />
         </div>
       </Container>
     </Section>

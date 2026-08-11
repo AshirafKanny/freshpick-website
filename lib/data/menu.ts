@@ -6,13 +6,13 @@ import type { MenuCategory, MenuItem } from "@/types/menu";
  * not a promise that every category currently has published items.
  */
 export const MENU_CATEGORIES: MenuCategory[] = [
-  { slug: "juices", name: "Fresh Juices", description: "" },
-  { slug: "juice-blends", name: "Juice Blends", description: "" },
-  { slug: "smoothies", name: "Smoothies", description: "" },
-  { slug: "fruit-cocktails", name: "Fruit Cocktails", description: "" },
-  { slug: "shawarma", name: "Shawarma", description: "" },
-  { slug: "chips", name: "Chips", description: "" },
-  { slug: "food", name: "Food", description: "" },
+  { slug: "juices", name: "Fresh Juices", description: "Pure, single-fruit juices" },
+  { slug: "juice-blends", name: "Juice Blends", description: "Blended fruit combinations" },
+  { slug: "smoothies", name: "Smoothies", description: "Thick, blended fruit smoothies" },
+  { slug: "fruit-cocktails", name: "Fruit Cocktails", description: "Mixed fruit cocktails" },
+  { slug: "shawarma", name: "Shawarma", description: "Wrapped and grilled" },
+  { slug: "chips", name: "Chips", description: "Golden and crispy" },
+  { slug: "food", name: "Food", description: "Restaurant favourites" },
 ];
 
 /**

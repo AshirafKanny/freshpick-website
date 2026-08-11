@@ -1,6 +1,9 @@
-/** Joins class names, dropping falsy values. No dependency needed at this scale. */
-export function cn(...classes: Array<string | false | null | undefined>): string {
-  return classes.filter(Boolean).join(" ");
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+/** Merges class names and resolves conflicting Tailwind utilities (last one wins). */
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
 }
 
 export function formatCurrency(amount: number, currency: "UGX" = "UGX"): string {

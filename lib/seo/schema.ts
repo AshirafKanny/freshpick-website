@@ -2,6 +2,7 @@ import { siteConfig } from "@/lib/config/site";
 import { absoluteUrl } from "@/lib/seo/metadata";
 import { isPlaceholder } from "@/lib/utils";
 import type { BlogPost } from "@/types/blog";
+import type { MenuItem } from "@/types/menu";
 import type { BreadcrumbItem } from "@/types/seo";
 
 /**
@@ -98,6 +99,30 @@ export function getBlogPostingSchema(post: BlogPost) {
     image: post.featuredImage ? absoluteUrl(post.featuredImage) : undefined,
     mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
   };
+}
+
+export function getProductSchema(item: MenuItem) {
+  const schema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: item.name,
+    description: item.description,
+    image: item.image ? absoluteUrl(item.image) : undefined,
+  };
+
+  if (item.price !== undefined && item.currency) {
+    schema.offers = {
+      "@type": "Offer",
+      price: item.price,
+      priceCurrency: item.currency,
+      availability: item.available
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: absoluteUrl(`/menu/${item.slug}`),
+    };
+  }
+
+  return schema;
 }
 
 export function getFaqSchema(items: Array<{ question: string; answer: string }>) {
