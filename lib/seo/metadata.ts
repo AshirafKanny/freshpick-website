@@ -19,7 +19,7 @@ export function buildMetadata(input: PageSeoInput): Metadata {
     : DEFAULT_OG_IMAGE;
 
   return {
-    title: input.title,
+    title: input.absoluteTitle ? { absolute: input.title } : input.title,
     description: input.description,
     alternates: {
       canonical: url,

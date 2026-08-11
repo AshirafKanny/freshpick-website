@@ -9,6 +9,7 @@ export const metadata: Metadata = buildMetadata({
   title: "FreshPick | Fresh Juices & Food in Uganda",
   description: siteConfig.description,
   path: "/",
+  absoluteTitle: true,
 });
 
 export default function HomePage() {

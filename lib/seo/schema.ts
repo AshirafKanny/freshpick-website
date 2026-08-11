@@ -28,7 +28,6 @@ export function getRestaurantSchema() {
     url: siteConfig.url,
     image: absoluteUrl(siteConfig.logo),
     servesCuisine: ["Juice Bar", "Fast Food"],
-    priceRange: undefined,
   };
 
   if (!isPlaceholder(siteConfig.phone)) schema.telephone = siteConfig.phone;

@@ -6,6 +6,13 @@ export interface PageSeoInput {
   image?: string;
   imageAlt?: string;
   noIndex?: boolean;
+  /**
+   * When true, `title` is used as-is in <title> instead of being run through the
+   * root layout's "%s | FreshPick" template. Use only when `title` is already a
+   * complete, standalone title (e.g. the homepage) — every other page should
+   * pass a short page name and let the template add the site name.
+   */
+  absoluteTitle?: boolean;
 }
 
 export interface BreadcrumbItem {
