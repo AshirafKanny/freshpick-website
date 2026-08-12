@@ -1,9 +1,5 @@
 import Image from "next/image";
-
-export interface GalleryImage {
-  src: string;
-  alt: string;
-}
+import type { GalleryImage } from "@/lib/data/gallery";
 
 export function GalleryGrid({ images }: { images: GalleryImage[] }) {
   if (images.length === 0) {

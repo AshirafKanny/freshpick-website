@@ -1,5 +1,17 @@
 import type { BlogPost } from "@/types/blog";
 
+/** Editorial category taxonomy the blog is architected around. */
+export const BLOG_CATEGORIES = [
+  "Fresh Juice",
+  "Food",
+  "Restaurant Life",
+  "Nutrition & Ingredients",
+  "FreshPick News",
+  "Food Guides",
+  "Kampala Food",
+  "Behind the Scenes",
+];
+
 /**
  * Intentionally empty: no real FreshPick articles have been written yet.
  * Populate this array (or swap it for a Markdown/MDX/CMS-backed fetch
@@ -20,4 +32,15 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
 
 export function getPostsByCategory(category: string): BlogPost[] {
   return getAllPosts().filter((post) => post.category === category);
+}
+
+export function searchPosts(query: string, category?: string): BlogPost[] {
+  const posts = category ? getPostsByCategory(category) : getAllPosts();
+  const q = query.trim().toLowerCase();
+  if (!q) return posts;
+  return posts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q)
+  );
 }

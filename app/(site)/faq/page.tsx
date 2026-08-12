@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { FAQ_ITEMS } from "@/lib/data/faq";
 import { buildMetadata } from "@/lib/seo/metadata";
@@ -16,22 +18,17 @@ export const metadata: Metadata = buildMetadata({
 export default function FaqPage() {
   return (
     <Section as="div">
-      <Container className="max-w-3xl">
+      <Container className="max-w-2xl">
         {FAQ_ITEMS.length > 0 && <JsonLd data={getFaqSchema(FAQ_ITEMS)} />}
-        <h1 className="text-3xl font-semibold tracking-tight">Frequently Asked Questions</h1>
+        <SectionHeading eyebrow="FAQ" title="Frequently Asked Questions" />
         {FAQ_ITEMS.length === 0 ? (
-          <p className="mt-4 text-sm text-muted">
+          <p className="mt-8 text-sm text-muted">
             Answers to common questions will be published here soon.
           </p>
         ) : (
-          <dl className="mt-8 space-y-6">
-            {FAQ_ITEMS.map((item) => (
-              <div key={item.question}>
-                <dt className="font-semibold">{item.question}</dt>
-                <dd className="mt-1 text-muted">{item.answer}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="mt-8">
+            <FAQAccordion items={FAQ_ITEMS} />
+          </div>
         )}
       </Container>
     </Section>

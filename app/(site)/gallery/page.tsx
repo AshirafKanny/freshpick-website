@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { GalleryGrid, type GalleryImage } from "@/components/gallery/GalleryGrid";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { GalleryGrid } from "@/components/gallery/GalleryGrid";
+import { GalleryFilter } from "@/components/gallery/GalleryFilter";
+import { GALLERY_CATEGORIES, GALLERY_IMAGES } from "@/lib/data/gallery";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/lib/config/site";
 
@@ -11,16 +14,25 @@ export const metadata: Metadata = buildMetadata({
   path: "/gallery",
 });
 
-// Intentionally empty until real FreshPick photography is provided.
-const GALLERY_IMAGES: GalleryImage[] = [];
+export default async function GalleryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const { category } = await searchParams;
+  const active =
+    category && GALLERY_CATEGORIES.some((c) => c.slug === category) ? category : "all";
+  const images = active === "all" ? GALLERY_IMAGES : GALLERY_IMAGES.filter((img) => img.category === active);
 
-export default function GalleryPage() {
   return (
     <Section as="div">
       <Container>
-        <h1 className="text-3xl font-semibold tracking-tight">Gallery</h1>
+        <SectionHeading eyebrow="Gallery" title="FreshPick in pictures" />
         <div className="mt-8">
-          <GalleryGrid images={GALLERY_IMAGES} />
+          <GalleryFilter categories={GALLERY_CATEGORIES} active={active} />
+        </div>
+        <div className="mt-10">
+          <GalleryGrid images={images} />
         </div>
       </Container>
     </Section>

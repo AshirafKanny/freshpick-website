@@ -3,15 +3,22 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { Badge } from "@/components/ui/Badge";
 import { getAllPosts, getPostBySlug } from "@/lib/data/blog";
 import { buildMetadata } from "@/lib/seo/metadata";
-import { getBlogPostingSchema, getBreadcrumbSchema } from "@/lib/seo/schema";
+import { getBlogPostingSchema } from "@/lib/seo/schema";
 import { formatDate } from "@/lib/utils";
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
 }
+
+// Blog content only changes via a rebuild (no live database), so slugs not
+// known at build time should 404 immediately at the routing layer instead
+// of falling back to an on-demand-rendered 200 response.
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
@@ -44,27 +51,32 @@ export default async function BlogPostPage({
     <Section as="div">
       <Container className="max-w-3xl">
         <JsonLd data={getBlogPostingSchema(post)} />
-        <JsonLd
-          data={getBreadcrumbSchema([
-            { name: "Blog", path: "/blog" },
-            { name: post.title, path: `/blog/${post.slug}` },
-          ])}
-        />
-        <p className="text-xs text-muted">
-          {formatDate(post.publishedAt)} &middot; {post.readingTime} min read
-        </p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight">{post.title}</h1>
+        <Breadcrumbs items={[{ name: "Blog", path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }]} />
+
+        <div className="mt-6">
+          <Badge>{post.category}</Badge>
+          <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+            {post.title}
+          </h1>
+          <p className="mt-3 text-sm text-muted">
+            By {post.author} &middot; {formatDate(post.publishedAt)} &middot; {post.readingTime} min read
+          </p>
+        </div>
+
         {post.featuredImage && (
           <Image
             src={post.featuredImage}
             alt={post.imageAlt ?? post.title}
             width={800}
             height={450}
-            className="mt-6 h-auto w-full rounded-lg object-cover"
+            className="mt-8 h-auto w-full rounded-2xl object-cover"
             priority
           />
         )}
-        <div className="prose mt-8 max-w-none">{post.content}</div>
+
+        <div className="mt-8 max-w-none whitespace-pre-line leading-relaxed text-foreground">
+          {post.content}
+        </div>
       </Container>
     </Section>
   );

@@ -17,6 +17,11 @@ export function generateStaticParams() {
   return MENU_ITEMS.map((item) => ({ slug: item.slug }));
 }
 
+// Menu content only changes via a rebuild (no live database), so slugs not
+// known at build time should 404 immediately at the routing layer instead
+// of falling back to an on-demand-rendered 200 response.
+export const dynamicParams = false;
+
 export async function generateMetadata({
   params,
 }: {

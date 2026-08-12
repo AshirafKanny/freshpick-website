@@ -5,6 +5,7 @@ import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { FoodShowcase } from "@/components/home/FoodShowcase";
 import { WhyFreshPick } from "@/components/home/WhyFreshPick";
 import { FreshnessStory } from "@/components/home/FreshnessStory";
+import { Testimonials } from "@/components/home/Testimonials";
 import { GalleryPreview } from "@/components/home/GalleryPreview";
 import { BlogPreview } from "@/components/home/BlogPreview";
 import { ContactCTA } from "@/components/home/ContactCTA";
@@ -27,6 +28,7 @@ export default function HomePage() {
       <FoodShowcase />
       <WhyFreshPick />
       <FreshnessStory />
+      <Testimonials />
       <GalleryPreview />
       <BlogPreview />
       <ContactCTA />
