@@ -4,59 +4,53 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { Container } from "@/components/layout/Container";
-import { NAV_LINKS } from "@/components/navigation/nav-links";
+import { FloatingNav } from "@/components/ui/floating-navbar";
 import { OrderButton } from "@/components/ui/OrderButton";
+import { NAV_LINKS } from "@/components/navigation/nav-links";
 import { siteConfig } from "@/lib/config/site";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const logo = (
+    <Link href="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
+      <Image src={siteConfig.logo} alt={`${siteConfig.name} logo`} width={36} height={32} priority />
+      <span className="font-display text-lg font-semibold">{siteConfig.name}</span>
+    </Link>
+  );
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
-      <Container className="flex h-18 items-center justify-between py-3">
-        <Link href="/" className="flex items-center gap-2.5" onClick={() => setIsOpen(false)}>
-          <Image src={siteConfig.logo} alt={`${siteConfig.name} logo`} width={44} height={39} priority />
-          <span className="font-display text-xl font-semibold">{siteConfig.name}</span>
-        </Link>
-
-        <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-8 text-sm font-medium">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="transition-colors hover:text-primary">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="hidden lg:block">
-          <OrderButton size="sm" />
-        </div>
-
-        <button
-          type="button"
-          className="lg:hidden"
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isOpen}
-          aria-controls="mobile-nav"
-          onClick={() => setIsOpen((open) => !open)}
-        >
-          {isOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-        </button>
-      </Container>
+    <>
+      <FloatingNav
+        navItems={NAV_LINKS.map((link) => ({ name: link.label, link: link.href }))}
+        logo={logo}
+        cta={<OrderButton size="sm" />}
+        mobileMenu={
+          <button
+            type="button"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setIsOpen((open) => !open)}
+          >
+            {isOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+          </button>
+        }
+      />
 
       {isOpen && (
-        <nav id="mobile-nav" aria-label="Primary" className="border-t border-border lg:hidden">
-          <Container>
-            <ul className="flex flex-col gap-1 py-3 text-sm font-medium">
+        <div className="fixed inset-x-0 top-20 z-40 flex justify-center px-4 lg:hidden">
+          <nav
+            id="mobile-nav"
+            aria-label="Primary"
+            className="w-full max-w-4xl rounded-2xl border border-border bg-surface p-4 shadow-lg shadow-foreground/5"
+          >
+            <ul className="space-y-1 text-sm font-medium">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="block rounded px-2 py-2 hover:bg-border/30"
+                    className="block rounded-lg px-3 py-2 hover:bg-primary-light hover:text-primary-dark"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.label}
@@ -64,12 +58,12 @@ export function Header() {
                 </li>
               ))}
             </ul>
-            <div className="pb-4">
+            <div className="mt-3">
               <OrderButton className="w-full" />
             </div>
-          </Container>
-        </nav>
+          </nav>
+        </div>
       )}
-    </header>
+    </>
   );
 }
